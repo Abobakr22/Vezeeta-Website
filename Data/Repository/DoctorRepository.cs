@@ -1,0 +1,175 @@
+﻿using Core.Dtos;
+using Core.Models;
+using Core.Repository;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+
+namespace Data.Repository
+{
+    public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public DoctorRepository(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager,
+              UserManager<ApplicationUser> userManager) : base(context, signInManager, userManager)
+        {
+            _context = context;
+            _signInManager = signInManager;
+            _userManager = userManager;
+        }
+
+        public async Task<GetDoctorDto> GetDoctorByIdAsync(int DoctorId)
+        {
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(x => x.Id == DoctorId);
+            if (doctor != null)
+            {
+                var details = new GetDoctorDto
+                {
+                    Image = doctor.ApplicationUsers.Image,
+                    FirstName = doctor.ApplicationUsers.FirstName,
+                    LastName = doctor.ApplicationUsers.LastName,
+                    FullName = doctor.ApplicationUsers.UserName,
+                    Email = doctor.ApplicationUsers.Email,
+                    Phone = doctor.ApplicationUsers.PhoneNumber,
+                    Gender = (int)doctor.ApplicationUsers.Gender,
+                    DateOfBirth = doctor.ApplicationUsers.DateOfBirth,
+                    Doctor = new Doctor
+                    {
+
+                        Price = doctor.Price,
+                        Id = doctor.Id,
+                        Specialization = new Specialization
+                        {
+                            Name = doctor.Specialization.Name
+                        }
+                    }
+                };
+                return details;
+            }
+            else
+            {
+                throw new Exception("Doctor not found");
+            }
+
+        }
+
+        // [details:{image, fullName, email, phone, specialize, gender, dateOfBirth}]
+        public async Task<IEnumerable<GetDoctorDto>> GetAllDoctorsAsync(int pageNumber, int pageSize, string Search)
+        {
+            return await _context.Doctors.Select(x => new GetDoctorDto
+            {
+                Gender = (int)x.ApplicationUsers.Gender,
+                Image = x.ApplicationUsers.Image,
+                FirstName = x.ApplicationUsers.FirstName,
+                LastName = x.ApplicationUsers.LastName,
+                FullName = x.ApplicationUsers.FirstName + " " + x.ApplicationUsers.LastName,
+                Email = x.ApplicationUsers.Email,
+                Phone = x.ApplicationUsers.PhoneNumber,
+                SpecializationName = x.Specialization.Name,
+                DateOfBirth = x.ApplicationUsers.DateOfBirth
+            })
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+        }
+
+        public async Task<bool> AddDoctorAsync(AddDoctorDto DoctorModel)
+        {
+            // {image,firstName,lastName,email,phone,Specialize,gender,dateOfBirth
+
+            try
+            {
+                var NewDoctor = new ApplicationUser
+                {
+                    FirstName = DoctorModel.FirstName,
+                    LastName = DoctorModel.LastName,
+                    Image = DoctorModel.Image,
+                    UserName = DoctorModel.FirstName + DoctorModel.LastName,
+                    Email = DoctorModel.EmailAddress,
+                    PhoneNumber = DoctorModel.PhoneNumber,
+                    Gender = DoctorModel.Gender,
+                    DateOfBirth = DoctorModel.DateOfBirth,
+                    //PasswordHash = DoctorModel.Password,
+
+                    Doctor = new Doctor()
+                    {
+                        Price = DoctorModel.Price,
+                        Specialization = new Specialization
+                        {
+                            Name = DoctorModel.Specialization.Name,   
+                        }
+                    }
+                };
+                var result = await _userManager.CreateAsync(NewDoctor, DoctorModel.Password);
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return false;
+        }
+
+        //{id,image,firstName,lastName,email,phone,specialize,gender,dateOfBirth
+        public async Task<bool> UpdateDoctorAsync(UpdateDoctorDto DoctorModel)
+        {
+            var EditedDoctor = await _context.Doctors.FirstOrDefaultAsync(x => x.Id == DoctorModel.Id);
+            if (EditedDoctor != null)
+            {
+                var UpdatedDoctor = new ApplicationUser
+                {
+                    Image = DoctorModel.Image,
+                    UserName = DoctorModel.FirstName + DoctorModel.LastName,
+                    Email = DoctorModel.EmailAddress,
+                    PhoneNumber = DoctorModel.PhoneNumber,
+                    Gender = (Core.Consts.Gender)DoctorModel.Gender,
+                    DateOfBirth = DoctorModel.DateOfBirth,
+                    Doctor = new Doctor
+                    {
+                        //Id = DoctorModel.Id,
+                        Specialization = new Specialization
+                        {
+                            Id = DoctorModel.Specialization.Id,
+                            Name = DoctorModel.Specialization.Name
+                        }
+                    }
+                };
+                var result = await _userManager.UpdateAsync(UpdatedDoctor);
+                return result.Succeeded;
+            }
+            else
+            {
+                throw new Exception("Doctor Not Found");
+            }
+
+        }
+
+
+        public async Task<bool> DeleteDoctorAsync(int DoctorId)
+        {
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(x => x.Id == DoctorId);
+            if (doctor != null)
+            {
+                _context.Doctors.Remove(doctor);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("You are not allowed to delete That Doctor");
+
+            }
+            return true;
+        }
+    }
+}
+
+
+//{
+//    return await _context.Doctors.Where(x => x.ApplicationUsers.UserName.Contains(Search))
+//                                 .Skip((pageNumber - 1) * pageSize)
+//                                 .Take(pageSize)
+//                                 .ToListAsync();
+//}
+
