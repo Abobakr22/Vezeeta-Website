@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Core.Dtos
 {
-    public class PatientDto
+    public class GetAppointmentDto
     {
+        public string Days { get; set; }
+        public List<TimeSpan> Times { get; set; }
     }
 }

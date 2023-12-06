@@ -40,6 +40,7 @@ namespace Vezeeta
             builder.Services.AddScoped<ApplicationDbContext>();
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+            builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 
             #endregion
 

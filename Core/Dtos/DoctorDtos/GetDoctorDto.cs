@@ -11,7 +11,7 @@ namespace Core.Dtos
 
     public class GetDoctorDto
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string? Image { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -19,6 +19,7 @@ namespace Core.Dtos
         public string Email { get; set; }
         public string Phone { get; set; }
         public int Gender { get; set; }
+        public double price { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string SpecializationName { get; set; }
         public Doctor Doctor { get; set; }

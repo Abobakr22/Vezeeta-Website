@@ -1,5 +1,6 @@
 ﻿using Core.Consts;
 using Core.Dtos;
+using Core.Dtos.DoctorDtos;
 using Core.Models;
 
 

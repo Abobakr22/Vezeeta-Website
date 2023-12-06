@@ -1,4 +1,5 @@
 ﻿using Core.Dtos;
+using Core.Dtos.DoctorDtos;
 using Core.Models;
 using Core.Repository;
 using Microsoft.AspNetCore.Identity;
@@ -27,23 +28,19 @@ namespace Data.Repository
             {
                 var details = new GetDoctorDto
                 {
-                    Image = doctor.ApplicationUsers.Image,
                     FirstName = doctor.ApplicationUsers.FirstName,
                     LastName = doctor.ApplicationUsers.LastName,
                     FullName = doctor.ApplicationUsers.UserName,
                     Email = doctor.ApplicationUsers.Email,
                     Phone = doctor.ApplicationUsers.PhoneNumber,
+                    Image = doctor.ApplicationUsers.Image,
                     Gender = (int)doctor.ApplicationUsers.Gender,
                     DateOfBirth = doctor.ApplicationUsers.DateOfBirth,
+                    SpecializationName = doctor.Specialization.Name,
+                    price = doctor.Price,
                     Doctor = new Doctor
                     {
-
-                        Price = doctor.Price,
                         Id = doctor.Id,
-                        Specialization = new Specialization
-                        {
-                            Name = doctor.Specialization.Name
-                        }
                     }
                 };
                 return details;
@@ -92,10 +89,10 @@ namespace Data.Repository
                     PhoneNumber = DoctorModel.PhoneNumber,
                     Gender = DoctorModel.Gender,
                     DateOfBirth = DoctorModel.DateOfBirth,
-                    //PasswordHash = DoctorModel.Password,
-
+                    
                     Doctor = new Doctor()
                     {
+                        Id = DoctorModel.Id,
                         Price = DoctorModel.Price,
                         Specialization = new Specialization
                         {
@@ -143,9 +140,7 @@ namespace Data.Repository
             {
                 throw new Exception("Doctor Not Found");
             }
-
         }
-
 
         public async Task<bool> DeleteDoctorAsync(int DoctorId)
         {

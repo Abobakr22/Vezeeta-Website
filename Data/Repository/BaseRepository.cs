@@ -31,6 +31,16 @@ namespace Data.Repository
             this.context = context;
         }
 
+        public async Task<bool> LoginAsync(LoginDto login)
+        {
+            return (await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, false)).Succeeded;
+        }
+
+        public async Task<ApplicationUser> GetUserAsync(string UserType, string UserName)
+        {
+            return (await _userManager.GetUsersInRoleAsync(UserType)).FirstOrDefault(x => x.UserName == UserName);
+        }
+
         public async Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>().FindAsync(id);
@@ -95,11 +105,6 @@ namespace Data.Repository
         public async Task<int> CountAsync(Expression<Func<T, bool>> criteria)
         {
             return await _context.Set<T>().CountAsync(criteria);
-        }
-
-        public async Task<bool> Login(LoginDto login)
-        {
-            return (await _signInManager.PasswordSignInAsync(login.UserName, login.Password, false, false)).Succeeded;
         }
     }
 }

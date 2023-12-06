@@ -1,4 +1,5 @@
 ﻿using Core.Account_Manager;
+using Core.Models;
 using System.Linq.Expressions;
 
 namespace Core.Repository
@@ -8,8 +9,9 @@ namespace Core.Repository
         Task<T> GetByIdAsync(int id);
         Task<IEnumerable<T>> GetAllAsync();
         Task AddAsync(T entity);
-        
-        Task<bool> Login (LoginDto login);
+
+        Task<ApplicationUser> GetUserAsync(string UserType, string UserName);
+        Task<bool> LoginAsync (LoginDto login);
 
         //method for finding items by criteria (Expression)
         Task<T> FindAsync(Expression<Func<T, bool>> predicate);

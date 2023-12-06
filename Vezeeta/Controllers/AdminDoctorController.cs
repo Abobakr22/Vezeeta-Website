@@ -1,6 +1,6 @@
 ﻿using Core;
 using Core.Consts;
-using Core.Dtos;
+using Core.Dtos.DoctorDtos;
 using Core.Models;
 using Core.Repository;
 using Data;

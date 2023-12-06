@@ -22,6 +22,8 @@ namespace Core.Models
 
         //navigation property for specialization
         public virtual Specialization Specialization { get; set; }
+        public virtual  List<Booking> Requests { get; set; }
+        public virtual List<Appointment> Appointments { get; set; }
         public int SpecializationId { get; set; }
 
        // nav property for 1-M relationship with Appointment
