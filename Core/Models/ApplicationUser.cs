@@ -9,7 +9,7 @@ namespace Core.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public string UserId { get; set; }
+        
         public string FirstName {  get; set; }
         public string LastName { get; set; }
         public Gender Gender { get; set; }
@@ -23,14 +23,10 @@ namespace Core.Models
         //edit => deleted class : public virtual List<Booking> Bookings { get; set; }
 
         //nav prop for 1-M relationshup between a patient and DiscountCoupon
-        public virtual DiscountCoupon DiscountCoupon { get; set; }
-        [AllowNull]
-        [ForeignKey("DiscountCoupon")]
-        public int? DiscountCouponId { get; set; }
+      
 
         //3/12
         public virtual Doctor Doctor { get; set; }
-        public int DoctorId { get; set; }
 
     }
 }

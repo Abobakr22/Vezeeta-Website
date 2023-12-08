@@ -2,10 +2,11 @@
 using Core.Models;
 using Core.Repository;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository
 {
-    public class DiscountCouponRepository : BaseRepository<DiscountCoupon> , IDiscountCouponRepository
+    public class DiscountCouponRepository : BaseRepository<DiscountCoupon>, IDiscountCouponRepository
     {
         private readonly ApplicationDbContext _context;
         //private readonly SignInManager<ApplicationUser> _signInManager;
@@ -14,7 +15,7 @@ namespace Data.Repository
               UserManager<ApplicationUser> userManager) : base(context, signInManager, userManager)
         {
             _context = context;
-          //  _signInManager = signInManager;
+            //  _signInManager = signInManager;
             _userManager = userManager;
         }
 
@@ -26,9 +27,11 @@ namespace Data.Repository
             var NewCoupon = new DiscountCoupon()
             {
                 DiscountCode = DiscountCouponDto.Code,
-                CompletedRequests = DiscountCouponDto.CompletedRequests,   
+                CompletedRequests = DiscountCouponDto.CompletedRequests,
                 DiscountType = DiscountCouponDto.DiscountType,
                 DiscountAmount = DiscountCouponDto.Value,
+                ExpirationDate = DiscountCouponDto.ExpirationDate,
+                IsValid = DiscountCouponDto.IsValid
             };
             await _context.DiscountCoupons.AddAsync(NewCoupon);
             await _context.SaveChangesAsync();
@@ -36,48 +39,48 @@ namespace Data.Repository
         }
 
         //{id,discoundCode,#requests,discoundType(enum),value }
-    public async Task<bool> UpdateDiscountCoupon(DiscountCouponDto discountCouponDto )
+        public async Task<bool> UpdateDiscountCoupon(DiscountCouponDto UpdatedCoupon)
         {
-            if (discountCouponDto is not null)
+            var ExistedCoupon = await _context.DiscountCoupons.FirstOrDefaultAsync(x => x.Id == UpdatedCoupon.Id);
+            if (ExistedCoupon is not null)
             {
-                var EditedCoupon = new DiscountCoupon()
-                {
-                    Id = discountCouponDto.Id,
-                    DiscountCode = discountCouponDto.Code,
-                    CompletedRequests = discountCouponDto.CompletedRequests,
-                    DiscountType = discountCouponDto.DiscountType,
-                    DiscountAmount = discountCouponDto.Value,
+                // Update existing coupon properties
+                ExistedCoupon.DiscountCode = UpdatedCoupon.Code;
+                ExistedCoupon.CompletedRequests = UpdatedCoupon.CompletedRequests;
+                ExistedCoupon.DiscountType = UpdatedCoupon.DiscountType;
+                ExistedCoupon.ExpirationDate = UpdatedCoupon.ExpirationDate;
+                ExistedCoupon.DiscountAmount = UpdatedCoupon.Value;
 
-                };
-                _context.DiscountCoupons.Update(EditedCoupon);
+                //var result = _context.DiscountCoupons.Update(ExistedCoupon);
                 await _context.SaveChangesAsync();
                 return true;
-
             }
+
             return false;
         }
 
         public async Task<bool> DeactivateDiscountCoupon(int CouponId)
         {
-            DiscountCoupon coupon= await _context.DiscountCoupons.FindAsync(CouponId);
-            if(coupon is not null)
+            var coupon= await _context.DiscountCoupons.FindAsync(CouponId);
+            if(coupon is not null && coupon.IsValid )
             {
-               coupon.IsValid = false;
-                await _context.SaveChangesAsync();
-                return true;
+                    coupon.IsValid = false;
+                    await _context.SaveChangesAsync();
+                    return true; 
             }
             return false;
         }
 
         public async Task<bool> DeleteDiscountCoupon(int CouponId)
         {
-            DiscountCoupon coupon = await _context.DiscountCoupons.FindAsync(CouponId);
+            var coupon = await _context.DiscountCoupons.FirstOrDefaultAsync(x => x.Id == CouponId);
             if (coupon is not null)
             {
-                bool isExist = _userManager.Users.Any(x => x.DiscountCouponId == CouponId);
-                if (!isExist)
+                bool isExist = _context.DiscountCoupons.Any(x => x.Id == CouponId);
+                if (isExist)
                 {
-                    _context.Remove(coupon);
+                   var result = _context.DiscountCoupons.Remove(coupon);
+                   await _context.SaveChangesAsync();
                     return true;
                 }
             }

@@ -28,20 +28,19 @@ namespace Data.Repository
             {
                 var details = new GetDoctorDto
                 {
+                    DoctorId = doctor.Id,
                     FirstName = doctor.ApplicationUsers.FirstName,
                     LastName = doctor.ApplicationUsers.LastName,
                     FullName = doctor.ApplicationUsers.UserName,
                     Email = doctor.ApplicationUsers.Email,
                     Phone = doctor.ApplicationUsers.PhoneNumber,
                     Image = doctor.ApplicationUsers.Image,
-                    Gender = (int)doctor.ApplicationUsers.Gender,
+                    Gender = doctor.ApplicationUsers.Gender.ToString(),
                     DateOfBirth = doctor.ApplicationUsers.DateOfBirth,
                     SpecializationName = doctor.Specialization.Name,
-                    price = doctor.Price,
-                    Doctor = new Doctor
-                    {
-                        Id = doctor.Id,
-                    }
+                    price = doctor.Price
+                    
+
                 };
                 return details;
             }
@@ -57,7 +56,7 @@ namespace Data.Repository
         {
             return await _context.Doctors.Select(x => new GetDoctorDto
             {
-                Gender = (int)x.ApplicationUsers.Gender,
+                Gender = x.ApplicationUsers.Gender.ToString(),
                 Image = x.ApplicationUsers.Image,
                 FirstName = x.ApplicationUsers.FirstName,
                 LastName = x.ApplicationUsers.LastName,
@@ -121,7 +120,7 @@ namespace Data.Repository
                     UserName = DoctorModel.FirstName + DoctorModel.LastName,
                     Email = DoctorModel.EmailAddress,
                     PhoneNumber = DoctorModel.PhoneNumber,
-                    Gender = (Core.Consts.Gender)DoctorModel.Gender,
+                    Gender = DoctorModel.Gender,
                     DateOfBirth = DoctorModel.DateOfBirth,
                     Doctor = new Doctor
                     {

@@ -4,6 +4,7 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231206225308_LATEST")]
+    partial class LATEST
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,9 +91,6 @@ namespace Data.Migrations
                     b.Property<int>("BookingType")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DiscountCouponId")
-                        .HasColumnType("int");
-
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
@@ -101,8 +101,6 @@ namespace Data.Migrations
                     b.HasIndex("AppointmentHourId");
 
                     b.HasIndex("AppointmentId");
-
-                    b.HasIndex("DiscountCouponId");
 
                     b.HasIndex("DoctorId");
 
@@ -402,6 +400,13 @@ namespace Data.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DiscountCouponId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -415,6 +420,8 @@ namespace Data.Migrations
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("DiscountCouponId");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -461,10 +468,6 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Models.DiscountCoupon", "DiscountCoupon")
-                        .WithMany()
-                        .HasForeignKey("DiscountCouponId");
-
                     b.HasOne("Core.Models.Doctor", "Doctor")
                         .WithMany("Requests")
                         .HasForeignKey("DoctorId")
@@ -474,8 +477,6 @@ namespace Data.Migrations
                     b.Navigation("Appointment");
 
                     b.Navigation("AppointmentHour");
-
-                    b.Navigation("DiscountCoupon");
 
                     b.Navigation("Doctor");
 
@@ -550,6 +551,17 @@ namespace Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Core.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("Core.Models.DiscountCoupon", "DiscountCoupon")
+                        .WithMany()
+                        .HasForeignKey("DiscountCouponId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DiscountCoupon");
                 });
 
             modelBuilder.Entity("Core.Models.Appointment", b =>

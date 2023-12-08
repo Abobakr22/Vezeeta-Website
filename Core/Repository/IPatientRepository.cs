@@ -14,10 +14,12 @@ namespace Core.Repository
     {
         //Task<bool> LoginPatient(LoginPatientDto loginPatientDto);
         Task<bool> AddNewPatient(AddPatientDto addPatientDto); //Register
-        Task<IEnumerable<GetAllDoctorsDto>> GetAllDoctors (int Page, int PageSize, string Search);
+        Task<IEnumerable<GetAllDoctorsDto>> GetAllDoctorsSearch(int Page, int PageSize, string Search);
         Task<bool> AddBooking(AddBookingDto addBookingDto);
         IEnumerable<GetBookingDetailsDto> GetAllBooking();
         Task<bool> CancelBooking(int BookingId);
+        Task<GetPatientDto> GetPatientById(string PatientId);
+        Task<IEnumerable<GetAllPatientsDto>> GetAllPatients(int Page , int PageSize , string Search);
 
 
     }

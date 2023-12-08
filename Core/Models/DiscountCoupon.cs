@@ -1,5 +1,5 @@
 ﻿using Core.Consts;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace Core.Models
 {
@@ -7,6 +7,9 @@ namespace Core.Models
     {
         public int Id { get; set; }
         public string DiscountCode { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime ExpirationDate { get; set; }
         public int CompletedRequests { get; set; }
 
@@ -19,3 +22,4 @@ namespace Core.Models
 
     }
 }
+

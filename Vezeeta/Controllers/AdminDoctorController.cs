@@ -38,7 +38,7 @@ namespace Vezeeta.Controllers
         [HttpGet("GetAllDoctors")]
         public async Task<IActionResult> GetAllDoctors()
         {
-            var Doctors = await _doctorRepository.GetAllDoctorsAsync(1 , 10 , "Asmaa");
+            var Doctors = await _doctorRepository.GetAllDoctorsAsync(1 , 10 , "Ah");
             if (Doctors is not null)
             {
                     return Ok(Doctors);             
