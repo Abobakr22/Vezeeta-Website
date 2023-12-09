@@ -25,8 +25,7 @@ namespace Core.Dtos.DoctorDtos
         public DateTime DateOfBirth { get; set; }
         public string? Image { get; set; }
         public double Price { get; set; }
-        public Specialization Specialization { get; set; }
-        public int SpecializationId { get; set; }
+        public string SpecializationName { get; set; }
 
     }
 }

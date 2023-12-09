@@ -5,7 +5,7 @@ namespace Vezeeta.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController : ControllerBase
+    public class AdminDashboardController : ControllerBase
     {
     }
 }

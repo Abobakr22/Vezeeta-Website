@@ -39,8 +39,6 @@ namespace Data.Repository
                     DateOfBirth = doctor.ApplicationUsers.DateOfBirth,
                     SpecializationName = doctor.Specialization.Name,
                     price = doctor.Price
-                    
-
                 };
                 return details;
             }
@@ -48,7 +46,6 @@ namespace Data.Repository
             {
                 throw new Exception("Doctor not found");
             }
-
         }
 
         // [details:{image, fullName, email, phone, specialize, gender, dateOfBirth}]
@@ -69,13 +66,11 @@ namespace Data.Repository
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-
         }
 
         public async Task<bool> AddDoctorAsync(AddDoctorDto DoctorModel)
         {
             // {image,firstName,lastName,email,phone,Specialize,gender,dateOfBirth
-
             try
             {
                 var NewDoctor = new ApplicationUser
@@ -88,7 +83,6 @@ namespace Data.Repository
                     PhoneNumber = DoctorModel.PhoneNumber,
                     Gender = DoctorModel.Gender,
                     DateOfBirth = DoctorModel.DateOfBirth,
-                    
                     Doctor = new Doctor()
                     {
                         Id = DoctorModel.Id,
@@ -114,32 +108,27 @@ namespace Data.Repository
             var EditedDoctor = await _context.Doctors.FirstOrDefaultAsync(x => x.Id == DoctorModel.Id);
             if (EditedDoctor != null)
             {
-                var UpdatedDoctor = new ApplicationUser
-                {
-                    Image = DoctorModel.Image,
-                    UserName = DoctorModel.FirstName + DoctorModel.LastName,
-                    Email = DoctorModel.EmailAddress,
-                    PhoneNumber = DoctorModel.PhoneNumber,
-                    Gender = DoctorModel.Gender,
-                    DateOfBirth = DoctorModel.DateOfBirth,
-                    Doctor = new Doctor
-                    {
-                        //Id = DoctorModel.Id,
-                        Specialization = new Specialization
-                        {
-                            Id = DoctorModel.Specialization.Id,
-                            Name = DoctorModel.Specialization.Name
-                        }
-                    }
-                };
-                var result = await _userManager.UpdateAsync(UpdatedDoctor);
-                return result.Succeeded;
+                EditedDoctor.ApplicationUsers.FirstName = DoctorModel.FirstName;
+                EditedDoctor.ApplicationUsers.LastName = DoctorModel.LastName;
+                EditedDoctor.ApplicationUsers.Image = DoctorModel.Image;
+                EditedDoctor.ApplicationUsers.UserName = DoctorModel.FirstName + DoctorModel.LastName;
+                EditedDoctor.ApplicationUsers.Email = DoctorModel.EmailAddress;
+                EditedDoctor.ApplicationUsers.PhoneNumber = DoctorModel.PhoneNumber;
+                EditedDoctor.ApplicationUsers.Gender = DoctorModel.Gender;
+                EditedDoctor.ApplicationUsers.DateOfBirth = DoctorModel.DateOfBirth;
+
+                EditedDoctor.Specialization.Name = DoctorModel.SpecializationName;
+
+                var result = await _context.SaveChangesAsync();
+                return result > 0; 
             }
             else
-            {
-                throw new Exception("Doctor Not Found");
+                {
+                   throw new Exception("Doctor Not Found");
+                }
             }
-        }
+
+            
 
         public async Task<bool> DeleteDoctorAsync(int DoctorId)
         {
@@ -158,12 +147,3 @@ namespace Data.Repository
         }
     }
 }
-
-
-//{
-//    return await _context.Doctors.Where(x => x.ApplicationUsers.UserName.Contains(Search))
-//                                 .Skip((pageNumber - 1) * pageSize)
-//                                 .Take(pageSize)
-//                                 .ToListAsync();
-//}
-

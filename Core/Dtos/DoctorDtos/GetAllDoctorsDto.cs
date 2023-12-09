@@ -26,8 +26,6 @@ namespace Core.Dtos.DoctorDtos
         public string Gender { get; set; }
         public Day Day { get; set; }
         public List<GetAppointmentDto> Appointments { get; set; }
-        ////  public AppointmentHour AppointmentHour { get; set; }
 
-        //public Doctor Doctor { get; set; }
     }
 }

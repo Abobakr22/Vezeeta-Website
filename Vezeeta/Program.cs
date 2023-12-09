@@ -42,6 +42,7 @@ namespace Vezeeta
             builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
             builder.Services.AddScoped<IPatientRepository, PatientRepository>();
             builder.Services.AddScoped<IDiscountCouponRepository, DiscountCouponRepository>();
+            builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
             #endregion
 

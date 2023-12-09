@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Core.Consts;
+﻿using Core.Consts;
 using Core.Dtos;
 using Core.Dtos.BookingDtos;
 using Core.Dtos.DoctorDtos;
@@ -8,8 +7,6 @@ using Core.Models;
 using Core.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using System.Drawing.Printing;
 
 
 namespace Data.Repository
@@ -42,13 +39,11 @@ namespace Data.Repository
                     Gender = addPatientDto.Gender,
                     DateOfBirth = addPatientDto.DateOfBirth,
                     AccountType = addPatientDto.AccountType
-
                 };
                 var result = await _userManager.CreateAsync(NewPatient, addPatientDto.Password);
             }
             catch (Exception ex)
             {
-
             }
             return false;
         }
@@ -198,36 +193,3 @@ namespace Data.Repository
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//FinalPrice = checkIfExist(x.Doctor.Price, x.DiscountCouponId),
-//private static  double checkIfExist(double price,int? couponId)
-//{
-//    if (couponId.HasValue)
-//    {
-//        var coupon= _context.DiscountCoupons.FirstOrDefault(x => x.IsValid && x.Id == couponId.Value);
-//        if (coupon != null) 
-//        {
-//            if (coupon.DiscountType.Equals(DiscountType.Value))
-//                return price - coupon.DiscountAmount;
-
-//            else
-//                return price - ((coupon.DiscountAmount / 100) * price);
-//        }
-//    }
-//    return 0;
-//}
-

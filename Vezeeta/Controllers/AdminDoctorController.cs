@@ -1,11 +1,6 @@
-﻿using Core;
-using Core.Consts;
-using Core.Dtos.DoctorDtos;
-using Core.Models;
+﻿using Core.Dtos.DoctorDtos;
 using Core.Repository;
 using Data;
-using Data.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Vezeeta.Controllers
@@ -68,8 +63,7 @@ namespace Vezeeta.Controllers
         }
         [HttpPatch("UpdateDoctor")]
         public async Task<IActionResult> UpdateDoctor([FromBody] UpdateDoctorDto doctor)
-        {
-            
+        {     
             try
             {
                 if (ModelState.IsValid)
@@ -84,8 +78,6 @@ namespace Vezeeta.Controllers
                 return BadRequest($"An error occurred while Updating an Existing Doctor : {ex.Message}");
 
             }
-
-
         }
 
         [HttpDelete("DeleteDoctor")]

@@ -8,7 +8,6 @@ namespace Core.Repository
 {
     public interface IDoctorRepository : IBaseRepository<Doctor>
     {
-        
         Task<bool> AddDoctorAsync (AddDoctorDto doctor );
         Task<bool> UpdateDoctorAsync(UpdateDoctorDto doctorModel);
         Task<bool> DeleteDoctorAsync(int DoctorId);

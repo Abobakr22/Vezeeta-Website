@@ -29,8 +29,6 @@ namespace Core.Dtos
         public DateTime DateOfBirth { get; set; }
         public string? Image { get; set; }
         public string SpecializationName { get; set; }
-        
-
-        
+           
     }
 }
