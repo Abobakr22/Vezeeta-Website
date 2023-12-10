@@ -5,7 +5,6 @@ namespace Core.Dtos.PatientDtos
 {
     public class AddPatientDto
     {
-        public AccountType AccountType { get; set; }
         [Required]
         public string UserName { get; set; }
         [Required]

@@ -2,6 +2,9 @@
 using Core.Service;
 using Data;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
+using MailKit.Net.Smtp;
+using MimeKit.Text;
 
 namespace Vezeeta.Controllers
 {
@@ -13,14 +16,38 @@ namespace Vezeeta.Controllers
 
         private readonly IDoctorService _doctorService;
         private readonly ApplicationDbContext _context;
-        public AdminDoctorController(IDoctorService doctorService, ApplicationDbContext context)
+        
+        public AdminDoctorController(IDoctorService doctorService, ApplicationDbContext context )
         {
             _doctorService = doctorService;
             _context = context;
+            
         }
 
+        
+        private async Task SendWelcomeEmail(string toEmail)
+        {
+            var fromEmail = "Abobakrragab3@gmail.com"; 
+            var subject = "Welcome to Vezeeta App";
+            var body = "Thank you for joining our Vezeeta App. Your account has been successfully created.";
 
-        [HttpGet("{id}")]
+            var email = new MimeMessage();
+            email.From.Add(MailboxAddress.Parse(fromEmail));
+            email.To.Add(MailboxAddress.Parse(toEmail));
+            email.Subject = "Account created Successfully ";
+            email.Body = new TextPart(TextFormat.Html) { Text = " Hello from Vezeeta app " };
+
+            using var stmp = new MailKit.Net.Smtp.SmtpClient();
+            stmp.Connect("smtp.gmail.com", 587);
+            stmp.Authenticate(fromEmail, "mwcwnhaxuryhclimsjsm");
+            stmp.Send(email);
+            stmp.Disconnect(true);   
+        }
+    
+
+
+
+    [HttpGet("{id}")]
         public async Task<IActionResult> GetDoctorByID([FromRoute] int id)
         {
             var Doctor = await _doctorService.GetDoctorByIdAsync(id);
@@ -48,10 +75,15 @@ namespace Vezeeta.Controllers
             //{ image,firstName,lastName,email,phone,specialize,gender,dateOfBirth}
             try
             {
+
                 if (ModelState.IsValid)
                 {                    
                     await _doctorService.AddDoctorAsync(doctor);
+                    //An error occurred while Adding a new Doctor : A socket operation was attempted to an unreachable network.
+                   // await SendWelcomeEmail(doctor.EmailAddress); 
                     return Ok();
+                    
+
                 }
                 return BadRequest(ModelState);
             }

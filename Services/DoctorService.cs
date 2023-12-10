@@ -90,10 +90,12 @@ namespace Services
                     PhoneNumber = DoctorModel.PhoneNumber,
                     Gender = DoctorModel.Gender,
                     DateOfBirth = DoctorModel.DateOfBirth,
+                    AccountType=AccountType.Doctor,
                     Doctor = new Doctor()
                     {
                         Id = DoctorModel.Id,
                         Price = DoctorModel.Price,
+                        // SpecializationId=DoctorModel.SpecializationId,
                         Specialization = new Specialization
                         {
                             Name = DoctorModel.Specialization.Name,

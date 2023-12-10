@@ -39,7 +39,7 @@ namespace Services
                     PhoneNumber = addPatientDto.PhoneNumber,
                     Gender = addPatientDto.Gender,
                     DateOfBirth = addPatientDto.DateOfBirth,
-                    AccountType = addPatientDto.AccountType
+                    AccountType = AccountType.Patient
                 };
                 var result = await _userManager.CreateAsync(NewPatient, addPatientDto.Password);
             }
