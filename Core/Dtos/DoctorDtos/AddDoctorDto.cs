@@ -23,15 +23,5 @@ namespace Core.Dtos.DoctorDtos
         public double Price { get; set; }
         public Specialization Specialization { get; set; }
         public int SpecializationId { get; set; }
-
-
-
-        //public List<Appointment> Appointments {  get; set; } 
-        //public List<AppointmentHour> AppointmentsHour { get; set; }
-
-
-        //{image,firstName,lastName,email,phone,specialize,gender,dateOfBirth }
-        //Object Of(Price & List Of Days(enum) Each Day have List Of Time)
-
     }
 }

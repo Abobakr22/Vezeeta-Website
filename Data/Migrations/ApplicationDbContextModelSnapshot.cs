@@ -43,7 +43,7 @@ namespace Data.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointments", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.AppointmentHour", b =>
@@ -64,7 +64,7 @@ namespace Data.Migrations
 
                     b.HasIndex("AppointmentId");
 
-                    b.ToTable("AppointmentHours");
+                    b.ToTable("AppointmentHours", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Booking", b =>
@@ -106,7 +106,7 @@ namespace Data.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.DiscountCoupon", b =>
@@ -138,7 +138,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DiscountCoupons");
+                    b.ToTable("DiscountCoupons", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Doctor", b =>
@@ -166,7 +166,7 @@ namespace Data.Migrations
 
                     b.HasIndex("SpecializationId");
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Specialization", b =>
@@ -183,7 +183,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Specializations");
+                    b.ToTable("Specializations", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

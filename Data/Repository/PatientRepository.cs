@@ -1,5 +1,6 @@
 ﻿using Core.Consts;
 using Core.Dtos;
+using Core.Dtos.AppointmentDtos;
 using Core.Dtos.BookingDtos;
 using Core.Dtos.DoctorDtos;
 using Core.Dtos.PatientDtos;
@@ -17,7 +18,7 @@ namespace Data.Repository
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         public PatientRepository(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager,
-              UserManager<ApplicationUser> userManager) : base(context, signInManager, userManager)
+              UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : base(context, signInManager, userManager, roleManager)
         {
             _context = context;
             _signInManager = signInManager;
@@ -87,7 +88,7 @@ namespace Data.Repository
 
         public async Task<bool> AddBooking(AddBookingDto addBookingDto)
         {
-           bool isExist=_context.Bookings.Any(x => x.AppointmentId == addBookingDto.appointmentId && x.AppointmentHourId == addBookingDto.timeId);
+            bool isExist = _context.Bookings.Any(x => x.AppointmentId == addBookingDto.appointmentId && x.AppointmentHourId == addBookingDto.timeId);
             if (!isExist)
             {
                 try
@@ -104,10 +105,10 @@ namespace Data.Repository
                     await _context.SaveChangesAsync();
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    
-                }               
+
+                }
             }
             return false;
         }
@@ -128,13 +129,13 @@ namespace Data.Repository
                 FinalPrice = x.DiscountCouponId.HasValue ?
                              (x.DiscountCoupon.DiscountType.Equals(DiscountType.Value) ?
                               x.Doctor.Price - x.DiscountCoupon.DiscountAmount :
-                              x.Doctor.Price - ((x.DiscountCoupon.DiscountAmount / 100) * x.Doctor.Price)) : 
+                              x.Doctor.Price - ((x.DiscountCoupon.DiscountAmount / 100) * x.Doctor.Price)) :
                               x.Doctor.Price
-            }) ;
+            });
         }
 
         public async Task<GetPatientDto> GetPatientById(string PatientId)
-        { 
+        {
             var Patient = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.Id == PatientId);
             if (Patient != null)
             {
@@ -164,8 +165,8 @@ namespace Data.Repository
                              x.Doctor.Price
                     }).ToList()
                 };
-                    
-                return details;      
+
+                return details;
             }
             else
             {
@@ -175,21 +176,38 @@ namespace Data.Repository
 
         public async Task<IEnumerable<GetAllPatientsDto>> GetAllPatients(int Page, int PageSize, string Search)
         {
-            
+
             return await _context.ApplicationUsers.Where(x => x.AccountType == AccountType.Patient)
                 .Select(x => new GetAllPatientsDto
-            {
-                Gender = x.Gender.ToString(),
-                Image = x.Image,
-                FullName = x.FirstName + " " + x.LastName,
-                Email = x.Email,
-                PhoneNumber = x.PhoneNumber,
-                DateOfBirth = x.DateOfBirth,
-                AccountType = x.AccountType.ToString()
-            })
+                {
+                    Gender = x.Gender.ToString(),
+                    Image = x.Image,
+                    FullName = x.FirstName + " " + x.LastName,
+                    Email = x.Email,
+                    PhoneNumber = x.PhoneNumber,
+                    DateOfBirth = x.DateOfBirth,
+                    AccountType = x.AccountType.ToString()
+                })
                 .Skip((Page - 1) * PageSize)
                 .Take(PageSize)
                 .ToListAsync();
+        }
+
+        public async Task<int> NumberOfPatients()
+        {
+            var patients = await _context.ApplicationUsers.CountAsync(x => x.AccountType == AccountType.Patient);
+            if (patients > 0)
+            {
+                return patients;
+            }
+            return 0;
+        }
+
+        public dynamic NumberOfRequests()
+        {
+            return _context.Bookings.GroupBy(x => x.BookingType)
+                                     .Select(x => new { Status = x.Key.ToString(), Count = x.Count() });
+
         }
     }
 }

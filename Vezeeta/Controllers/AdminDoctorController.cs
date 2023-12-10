@@ -10,6 +10,7 @@ namespace Vezeeta.Controllers
     public class AdminDoctorController : ControllerBase
     {
         //using dependency injection to inject iDoctorrepository
+
         private readonly IDoctorRepository _doctorRepository;
         private readonly ApplicationDbContext _context;
         public AdminDoctorController(IDoctorRepository doctorRepository , ApplicationDbContext context)

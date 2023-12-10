@@ -8,17 +8,17 @@ namespace Data
         public static async Task Initialize(UserManager<ApplicationUser> userManager,
                                             RoleManager<IdentityRole> roleManager)
         {
-            String roleName = "Admin" ;
+            string roleName = "Admin";
 
             IdentityResult roleResult;
 
-                var roleExist = await roleManager.RoleExistsAsync(roleName);
+            var roleExist = await roleManager.RoleExistsAsync(roleName);
 
-                if (!roleExist)
-                {
-                    roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
-                }
-          
+            if (!roleExist)
+            {
+                roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
+            }
+
 
             ApplicationUser user = await userManager.FindByEmailAsync("admin@example.com");
 
@@ -29,9 +29,11 @@ namespace Data
                     UserName = "admin@example.com",
                     Email = "admin@example.com",
                 };
-                await userManager.CreateAsync(user, "Admin@123");
+                var result = await userManager.CreateAsync(user, "Admin@123");
+                if (result.Succeeded)
+                    await userManager.AddToRoleAsync(user, "Admin");
             }
-            await userManager.AddToRoleAsync(user, "Admin");
+
         }
     }
 }

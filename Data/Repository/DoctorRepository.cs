@@ -1,10 +1,10 @@
 ﻿using Core.Dtos;
 using Core.Dtos.DoctorDtos;
+using Core.Dtos.StatisticsDtos;
 using Core.Models;
 using Core.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
 
 namespace Data.Repository
 {
@@ -14,7 +14,7 @@ namespace Data.Repository
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         public DoctorRepository(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager,
-              UserManager<ApplicationUser> userManager) : base(context, signInManager, userManager)
+              UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : base(context, signInManager, userManager, roleManager)
         {
             _context = context;
             _signInManager = signInManager;
@@ -89,13 +89,13 @@ namespace Data.Repository
                         Price = DoctorModel.Price,
                         Specialization = new Specialization
                         {
-                            Name = DoctorModel.Specialization.Name,   
+                            Name = DoctorModel.Specialization.Name,
                         }
                     }
                 };
                 var result = await _userManager.CreateAsync(NewDoctor, DoctorModel.Password);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -116,19 +116,16 @@ namespace Data.Repository
                 EditedDoctor.ApplicationUsers.PhoneNumber = DoctorModel.PhoneNumber;
                 EditedDoctor.ApplicationUsers.Gender = DoctorModel.Gender;
                 EditedDoctor.ApplicationUsers.DateOfBirth = DoctorModel.DateOfBirth;
-
                 EditedDoctor.Specialization.Name = DoctorModel.SpecializationName;
 
                 var result = await _context.SaveChangesAsync();
-                return result > 0; 
+                return result > 0;
             }
             else
-                {
-                   throw new Exception("Doctor Not Found");
-                }
+            {
+                throw new Exception("Doctor Not Found");
             }
-
-            
+        }
 
         public async Task<bool> DeleteDoctorAsync(int DoctorId)
         {
@@ -145,5 +142,42 @@ namespace Data.Repository
             }
             return true;
         }
+
+        public async Task<int> NumberOfDoctors()
+        {
+            var doctors = await _context.Doctors.CountAsync();
+            if (doctors > 0)
+            {
+                return doctors;
+            }
+            return 0;
+        }
+
+        public List<TopSpecializationsDto> TopFiveSpecializations()
+        {
+            return _context.Doctors.Select(x => new TopSpecializationsDto
+            {
+                SpecializationName = x.Specialization.Name,
+                TotalRequests = x.Requests.Count()
+            })
+            .OrderByDescending(z => z.TotalRequests)
+            .Take(5)
+            .ToList();
+        }
+
+        public List<TopDoctorsDto> TopTenDoctors()
+        {
+            return _context.Doctors.Select(x => new TopDoctorsDto
+            {
+                SpecializationName = x.Specialization.Name,
+                Image = x.ApplicationUsers.Image,
+                FullName = x.ApplicationUsers.FirstName + " " + x.ApplicationUsers.LastName,
+                TotalRequests = x.Requests.Count()
+            })
+           .OrderByDescending(z => z.TotalRequests)
+           .Take(10)
+           .ToList();
+        }
+
     }
 }

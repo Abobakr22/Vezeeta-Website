@@ -2,8 +2,6 @@
 using Core.Dtos.PatientDtos;
 using Core.Repository;
 using Data;
-using Data.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Vezeeta.Controllers
@@ -12,8 +10,6 @@ namespace Vezeeta.Controllers
     [ApiController]
     public class PatientController : ControllerBase
     {
-
-        //using dependency injection to inject iDoctorrepository
         private readonly IPatientRepository _patientRepository;
         private readonly ApplicationDbContext _context;
         public PatientController(IPatientRepository patientRepository, ApplicationDbContext context)
@@ -58,7 +54,7 @@ namespace Vezeeta.Controllers
         [HttpGet("GetAllBookings")]
         public IActionResult GetAllBookings()
         {
-            var Bookings =  _patientRepository.GetAllBooking();
+            var Bookings = _patientRepository.GetAllBooking();
             if (Bookings is not null)
             {
                 return Ok(Bookings);
@@ -81,7 +77,6 @@ namespace Vezeeta.Controllers
             catch (Exception ex)
             {
                 return BadRequest($"An error occurred while Adding a new Patient : {ex.Message}");
-
             }
         }
 
@@ -101,13 +96,11 @@ namespace Vezeeta.Controllers
             catch (Exception ex)
             {
                 return BadRequest($"An error occurred while Adding a new Booking : {ex.Message}");
-
             }
         }
 
-
         [HttpDelete("CancelBooking")]
-        public async Task<IActionResult> CancelBooking ([FromQuery] int id)
+        public async Task<IActionResult> CancelBooking([FromQuery] int id)
         {
             var CancelledBooking = await _context.Bookings.FindAsync(id);
             if (CancelledBooking is not null)
@@ -117,6 +110,5 @@ namespace Vezeeta.Controllers
             }
             return Ok(false);
         }
-
     }
 }

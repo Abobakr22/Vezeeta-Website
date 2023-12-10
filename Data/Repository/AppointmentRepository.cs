@@ -1,5 +1,5 @@
 ﻿using Core.Consts;
-using Core.Dtos;
+using Core.Dtos.AppointmentDtos;
 using Core.Dtos.DoctorDtos;
 using Core.Models;
 using Core.Repository;
@@ -16,13 +16,12 @@ namespace Data.Repository
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         public AppointmentRepository(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager,
-              UserManager<ApplicationUser> userManager) : base(context, signInManager, userManager)
+              UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : base(context, signInManager, userManager, roleManager)
         {
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
         }
-
 
         public async Task<bool> AddAppointment(AddApointmentDto addApointmentDto)
         {
@@ -36,12 +35,10 @@ namespace Data.Repository
                 }
                 var newAppointment = new Appointment
                 {
-
                     Day = addApointmentDto.Days.FirstOrDefault(),
                     Hours = addApointmentDto.times.Select(time => new AppointmentHour { Time = TimeSpan.FromHours(time) }).ToList(),
                     DoctorId = addApointmentDto.DoctorId,
                 };
-
                 _context.Appointments.Add(newAppointment);
                 await _context.SaveChangesAsync();
                 return true;
@@ -52,7 +49,6 @@ namespace Data.Repository
                 return false;
             }
         }
-
 
         public async Task<bool> UpdateAppointment(UpdateAppointmentDto updateAppointmentDto)
         {
@@ -75,15 +71,12 @@ namespace Data.Repository
                 await _context.SaveChangesAsync();
                 return true;
             }
-
             else
             {
                 // Appointment not found
                 throw new Exception("Appointment not found");
-
             }
         }
-
 
         public async Task<bool> DeleteAppointment(int AppointmentHourId)
         {
@@ -106,7 +99,8 @@ namespace Data.Repository
             else
             {
                 throw new Exception("Appointment Not Found");
-            }            
+            }
         }
+
     }
 }

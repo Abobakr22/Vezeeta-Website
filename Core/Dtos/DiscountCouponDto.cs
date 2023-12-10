@@ -11,16 +11,14 @@ namespace Core.Dtos
     {
         public int Id { get; set; }
         public string Code { get; set; }
-        public DiscountType DiscountType { get; set; }
         public Double Value { get; set; }
         public int CompletedRequests { get; set; }
         public bool IsValid { get; set; }
+        public DiscountType DiscountType { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-         public DateTime ExpirationDate { get; set; }
-
-
+        public DateTime ExpirationDate { get; set; }
     }
 }
 

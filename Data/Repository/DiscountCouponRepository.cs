@@ -9,19 +9,17 @@ namespace Data.Repository
     public class DiscountCouponRepository : BaseRepository<DiscountCoupon>, IDiscountCouponRepository
     {
         private readonly ApplicationDbContext _context;
-        //private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         public DiscountCouponRepository(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager,
-              UserManager<ApplicationUser> userManager) : base(context, signInManager, userManager)
+              UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : base(context, signInManager, userManager, roleManager)
         {
             _context = context;
-            //  _signInManager = signInManager;
+            _signInManager = signInManager;
             _userManager = userManager;
         }
 
-
-
-        //{discoundCode,#requests(Completed),discoundType(enum),value  }
+        //{discoundCode,#requests(Completed),discoundType(enum),value }
         public async Task<bool> AddDiscountCoupon(DiscountCouponDto DiscountCouponDto)
         {
             var NewCoupon = new DiscountCoupon()
@@ -38,35 +36,31 @@ namespace Data.Repository
             return true;
         }
 
-        //{id,discoundCode,#requests,discoundType(enum),value }
+        //{id,discoundCode,#requests,discoundType(enum),value}
         public async Task<bool> UpdateDiscountCoupon(DiscountCouponDto UpdatedCoupon)
         {
             var ExistedCoupon = await _context.DiscountCoupons.FirstOrDefaultAsync(x => x.Id == UpdatedCoupon.Id);
             if (ExistedCoupon is not null)
             {
-                // Update existing coupon properties
                 ExistedCoupon.DiscountCode = UpdatedCoupon.Code;
                 ExistedCoupon.CompletedRequests = UpdatedCoupon.CompletedRequests;
                 ExistedCoupon.DiscountType = UpdatedCoupon.DiscountType;
                 ExistedCoupon.ExpirationDate = UpdatedCoupon.ExpirationDate;
                 ExistedCoupon.DiscountAmount = UpdatedCoupon.Value;
 
-                //var result = _context.DiscountCoupons.Update(ExistedCoupon);
-                await _context.SaveChangesAsync();
                 return true;
             }
-
             return false;
         }
 
         public async Task<bool> DeactivateDiscountCoupon(int CouponId)
         {
-            var coupon= await _context.DiscountCoupons.FindAsync(CouponId);
-            if(coupon is not null && coupon.IsValid )
+            var coupon = await _context.DiscountCoupons.FindAsync(CouponId);
+            if (coupon is not null && coupon.IsValid)
             {
-                    coupon.IsValid = false;
-                    await _context.SaveChangesAsync();
-                    return true; 
+                coupon.IsValid = false;
+                await _context.SaveChangesAsync();
+                return true;
             }
             return false;
         }
@@ -79,8 +73,8 @@ namespace Data.Repository
                 bool isExist = _context.DiscountCoupons.Any(x => x.Id == CouponId);
                 if (isExist)
                 {
-                   var result = _context.DiscountCoupons.Remove(coupon);
-                   await _context.SaveChangesAsync();
+                    var result = _context.DiscountCoupons.Remove(coupon);
+                    await _context.SaveChangesAsync();
                     return true;
                 }
             }

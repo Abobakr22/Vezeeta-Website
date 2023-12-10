@@ -51,6 +51,7 @@ namespace Vezeeta
                 builder.Services.AddSwaggerGen();
 
                 var app = builder.Build();
+            
 
                 // Configure the HTTP request pipeline.
                 if (app.Environment.IsDevelopment())
@@ -58,16 +59,15 @@ namespace Vezeeta
                     app.UseSwagger();
                     app.UseSwaggerUI();
                 }
+            
 
-            //void Configure(IApplicationBuilder app, IWebHostEnvironment env,
-            //    UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
-            //{
-            //    // Other configurations...
+            void  Configure(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+            {
+                
+            }
+                
 
-            //    SeedData.Initialize(userManager, roleManager).Wait();
-            //}
-
-            app.UseHttpsRedirection();
+                app.UseHttpsRedirection();
 
                 app.UseAuthentication();
                 app.UseAuthorization();

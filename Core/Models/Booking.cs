@@ -7,6 +7,7 @@ namespace Core.Models
     public class Booking
     {
         public int Id { get; set; }
+        public RequestType BookingType { get; set; }         //type of Appointment
 
         //nav property for 1-M relationship with Doctor
         public virtual Doctor Doctor { get; set; }
@@ -14,7 +15,7 @@ namespace Core.Models
 
         //nav property for 1-M relationship with patient
         public virtual ApplicationUser Patient { get; set; }
-        public string ApplicationUserId { get; set; } 
+        public string ApplicationUserId { get; set; }
 
         //nav property for 1-1 relationship with Appointment
         public virtual Appointment Appointment { get; set; }
@@ -25,16 +26,7 @@ namespace Core.Models
         [ForeignKey("Booking")]
         public int AppointmentHourId { get; set; }
 
-        //type of Appointment
-        public RequestType BookingType { get; set; }
-
-        //[AllowNull]
-        //[ForeignKey("DiscountCoupon")]
         public int? DiscountCouponId { get; set; }
         public virtual DiscountCoupon DiscountCoupon { get; set; }
-        
-
-        
     }
-
 }

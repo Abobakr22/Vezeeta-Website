@@ -1,11 +1,6 @@
 ﻿using Core.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Core.Account_Manager;
 using Core.Models;
 using Microsoft.AspNetCore.Identity;
@@ -18,17 +13,12 @@ namespace Data.Repository
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private ApplicationDbContext context;
-
-        public BaseRepository(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public BaseRepository(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+            SeedData.Initialize(userManager, roleManager).Wait();
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
-        }
-
-        public BaseRepository(ApplicationDbContext context)
-        {
-            this.context = context;
         }
 
         public async Task<bool> LoginAsync(LoginDto login)
@@ -56,12 +46,6 @@ namespace Data.Repository
             await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
         }
-
-        //public async Task AddRangeAsync(IEnumerable<T> entities)
-        //{
-        //    await _context.Set<T>().AddRangeAsync(entities);
-        //    await _context.SaveChangesAsync();
-        //}
 
         public Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
@@ -91,12 +75,6 @@ namespace Data.Repository
                 await _context.SaveChangesAsync();
             }
         }
-
-        //public void DeleteRange(IEnumerable<T> entities)
-        //{
-        //    _context.Set<T>().RemoveRange(entities);
-        //}
-
 
         public async Task<int> CountAsync()
         {

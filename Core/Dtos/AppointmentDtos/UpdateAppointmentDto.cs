@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Dtos
+namespace Core.Dtos.AppointmentDtos
 {
     public class UpdateAppointmentDto
     {

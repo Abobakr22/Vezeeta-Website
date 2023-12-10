@@ -2,8 +2,6 @@
 using Core.Dtos.DoctorDtos;
 using Core.Repository;
 using Data;
-using Data.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Vezeeta.Controllers
@@ -20,7 +18,6 @@ namespace Vezeeta.Controllers
             _context = context;
         }
 
-
         [HttpPost("AddNewCoupon")]
         public async Task<IActionResult> AddDiscountCoupon([FromBody] DiscountCouponDto coupon)
         {
@@ -36,9 +33,7 @@ namespace Vezeeta.Controllers
             catch (Exception ex)
             {
                 return BadRequest($"An error occurred while Adding a new Coupon : {ex.Message}");
-
             }
-
         }
 
         [HttpPatch("UpdateCoupon")]
@@ -56,7 +51,6 @@ namespace Vezeeta.Controllers
             catch (Exception ex)
             {
                 return BadRequest($"An error occurred while Updating an Existing Coupon : {ex.Message}");
-
             }
         }
 
@@ -67,9 +61,9 @@ namespace Vezeeta.Controllers
             if (DeactivatedCoupon is not null)
             {
                 var result = await _discountCouponRepository.DeactivateDiscountCoupon(id);
-                    return Ok(result);
-                }
-                return Ok("Coupon Not Found");
+                return Ok(result);
+            }
+            return Ok("Coupon Not Found");
         }
 
         [HttpDelete("DeleteCoupon")]
@@ -83,8 +77,6 @@ namespace Vezeeta.Controllers
             }
             return Ok("Coupon Not Exist ");
         }
-        
-
 
     }
 }
