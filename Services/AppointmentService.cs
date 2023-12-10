@@ -3,6 +3,7 @@ using Core.Dtos.AppointmentDtos;
 using Core.Models;
 using Core.Service;
 using Data;
+using Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Eventing.Reader;

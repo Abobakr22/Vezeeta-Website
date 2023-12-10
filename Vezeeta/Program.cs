@@ -5,6 +5,7 @@ using Core.Repository;
 using Core;
 using Core.Service;
 using Services;
+using Data.Repository;
 
 namespace Vezeeta
 {
@@ -35,7 +36,7 @@ namespace Vezeeta
             #region Injected Services
 
             builder.Services.AddScoped<ApplicationDbContext>();
-            builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(Data.BaseRepository<>));
+            builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             builder.Services.AddScoped<IDoctorService, DoctorService>();
             builder.Services.AddScoped<IPatientService, PatientService>();
             builder.Services.AddScoped<IDiscountCouponService, DiscountCouponService>();

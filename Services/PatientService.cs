@@ -8,6 +8,7 @@ using Core.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Core.Dtos.AppointmentDtos;
+using Data.Repository;
 
 namespace Services
 {
