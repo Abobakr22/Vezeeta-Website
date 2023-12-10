@@ -1,12 +1,15 @@
-﻿using Core.Dtos.AppointmentDtos;
+﻿using Core.Consts;
+using Core.Dtos.AppointmentDtos;
 using Core.Service;
 using Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Vezeeta.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = nameof(AccountType.Doctor))]
     public class DoctorController : ControllerBase
     {
         private readonly IAppointmentService _appointmentService;

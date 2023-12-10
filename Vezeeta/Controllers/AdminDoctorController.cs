@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using MailKit.Net.Smtp;
 using MimeKit.Text;
+using Core.Consts;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Vezeeta.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = nameof(AccountType.Admin))]
     public class AdminDoctorController : ControllerBase
     {
         //using dependency injection to inject iDoctorrepository

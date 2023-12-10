@@ -1,11 +1,14 @@
-﻿using Core.Service;
+﻿using Core.Consts;
+using Core.Service;
 using Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Vezeeta.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = nameof(AccountType.Admin))]
     public class AdminDashboardController : ControllerBase
     {
         //using dependency injection to inject iDoctorrepository

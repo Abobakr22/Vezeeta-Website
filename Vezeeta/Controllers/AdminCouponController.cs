@@ -1,13 +1,16 @@
-﻿using Core.Dtos;
+﻿using Core.Consts;
+using Core.Dtos;
 using Core.Dtos.DoctorDtos;
 using Core.Service;
 using Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Vezeeta.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles =nameof(AccountType.Admin))]
     public class AdminCouponController : ControllerBase
     {
         private readonly IDiscountCouponService _discountCouponService;
