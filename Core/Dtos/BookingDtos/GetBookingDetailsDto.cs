@@ -1,4 +1,7 @@
-﻿namespace Core.Dtos.BookingDtos
+﻿using Core.Consts;
+using Core.Models;
+
+namespace Core.Dtos.BookingDtos
 {
     public class GetBookingDetailsDto
     {
@@ -12,6 +15,9 @@
         public double FinalPrice { get; set; }
         public string Day { get; set; }
         public TimeSpan Time { get; set; }
+        //public Gender Gender { get; set; }
+        public int Age { get; set; }
+        public ApplicationUser Patient { get; set; }
 
 
     }

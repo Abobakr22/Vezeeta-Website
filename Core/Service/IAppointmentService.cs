@@ -1,9 +1,10 @@
 ﻿using Core.Dtos.AppointmentDtos;
 using Core.Models;
+using Core.Repository;
 
-namespace Core.Repository
+namespace Core.Service
 {
-    public interface IAppointmentRepository : IBaseRepository<Appointment>
+    public interface IAppointmentService : IBaseRepository<Appointment>
     {
         Task<bool> AddAppointment(AddApointmentDto addApointmentDto);
         Task<bool> UpdateAppointment(UpdateAppointmentDto updateAppointmentDto);

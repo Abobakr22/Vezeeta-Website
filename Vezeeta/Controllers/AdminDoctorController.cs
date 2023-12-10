@@ -1,5 +1,5 @@
 ﻿using Core.Dtos.DoctorDtos;
-using Core.Repository;
+using Core.Service;
 using Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +11,11 @@ namespace Vezeeta.Controllers
     {
         //using dependency injection to inject iDoctorrepository
 
-        private readonly IDoctorRepository _doctorRepository;
+        private readonly IDoctorService _doctorService;
         private readonly ApplicationDbContext _context;
-        public AdminDoctorController(IDoctorRepository doctorRepository , ApplicationDbContext context)
+        public AdminDoctorController(IDoctorService doctorService, ApplicationDbContext context)
         {
-            _doctorRepository = doctorRepository;
+            _doctorService = doctorService;
             _context = context;
         }
 
@@ -23,7 +23,7 @@ namespace Vezeeta.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDoctorByID([FromRoute] int id)
         {
-            var Doctor = await _doctorRepository.GetDoctorByIdAsync(id);
+            var Doctor = await _doctorService.GetDoctorByIdAsync(id);
             if (Doctor is not null)
             {
                 return Ok(Doctor);
@@ -34,7 +34,7 @@ namespace Vezeeta.Controllers
         [HttpGet("GetAllDoctors")]
         public async Task<IActionResult> GetAllDoctors()
         {
-            var Doctors = await _doctorRepository.GetAllDoctorsAsync(1 , 10 , "Ah");
+            var Doctors = await _doctorService.GetAllDoctorsAsync(1 , 10 , "Ah");
             if (Doctors is not null)
             {
                     return Ok(Doctors);             
@@ -50,7 +50,7 @@ namespace Vezeeta.Controllers
             {
                 if (ModelState.IsValid)
                 {                    
-                    await _doctorRepository.AddDoctorAsync(doctor);
+                    await _doctorService.AddDoctorAsync(doctor);
                     return Ok();
                 }
                 return BadRequest(ModelState);
@@ -69,7 +69,7 @@ namespace Vezeeta.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _doctorRepository.UpdateDoctorAsync(doctor);
+                    await _doctorService.UpdateDoctorAsync(doctor);
                     return Ok("Doctor Updated Successfully");
                 }
                 return BadRequest(ModelState);
@@ -84,10 +84,10 @@ namespace Vezeeta.Controllers
         [HttpDelete("DeleteDoctor")]
         public async Task<IActionResult> DeleteDoctor([FromQuery] int id)
         {
-            var DeletedDoctor = await _doctorRepository.GetByIdAsync(id);
+            var DeletedDoctor = await _doctorService.GetByIdAsync(id);
             if (DeletedDoctor is not null)
             {
-                await _doctorRepository.DeleteDoctorAsync(id);
+                await _doctorService.DeleteDoctorAsync(id);
                 return Ok("Doctor Deleted Successfully");
             }
             return Ok(false);

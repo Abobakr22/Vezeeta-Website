@@ -1,6 +1,6 @@
 ﻿using Core.Dtos;
 using Core.Dtos.DoctorDtos;
-using Core.Repository;
+using Core.Service;
 using Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +10,11 @@ namespace Vezeeta.Controllers
     [ApiController]
     public class AdminCouponController : ControllerBase
     {
-        private readonly IDiscountCouponRepository _discountCouponRepository;
+        private readonly IDiscountCouponService _discountCouponService;
         private readonly ApplicationDbContext _context;
-        public AdminCouponController(IDiscountCouponRepository discountCouponRepository, ApplicationDbContext context)
+        public AdminCouponController(IDiscountCouponService discountCouponService, ApplicationDbContext context)
         {
-            _discountCouponRepository = discountCouponRepository;
+            _discountCouponService = discountCouponService;
             _context = context;
         }
 
@@ -25,7 +25,7 @@ namespace Vezeeta.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _discountCouponRepository.AddDiscountCoupon(coupon);
+                    await _discountCouponService.AddDiscountCoupon(coupon);
                     return Ok();
                 }
                 return BadRequest(ModelState);
@@ -43,7 +43,7 @@ namespace Vezeeta.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _discountCouponRepository.UpdateDiscountCoupon(UpdatedCoupon);
+                    await _discountCouponService.UpdateDiscountCoupon(UpdatedCoupon);
                     return Ok("Coupon Updated Successfully");
                 }
                 return BadRequest(ModelState);
@@ -57,10 +57,10 @@ namespace Vezeeta.Controllers
         [HttpPatch("DeactivateCoupon")]
         public async Task<IActionResult> DeactivateCoupon([FromQuery] int id)
         {
-            var DeactivatedCoupon = await _discountCouponRepository.GetByIdAsync(id);
+            var DeactivatedCoupon = await _discountCouponService.GetByIdAsync(id);
             if (DeactivatedCoupon is not null)
             {
-                var result = await _discountCouponRepository.DeactivateDiscountCoupon(id);
+                var result = await _discountCouponService.DeactivateDiscountCoupon(id);
                 return Ok(result);
             }
             return Ok("Coupon Not Found");
@@ -69,10 +69,10 @@ namespace Vezeeta.Controllers
         [HttpDelete("DeleteCoupon")]
         public async Task<IActionResult> DeleteCoupon([FromQuery] int id)
         {
-            var DeletedCoupon = await _discountCouponRepository.GetByIdAsync(id);
+            var DeletedCoupon = await _discountCouponService.GetByIdAsync(id);
             if (DeletedCoupon is not null)
             {
-                var result = await _discountCouponRepository.DeleteDiscountCoupon(id);
+                var result = await _discountCouponService.DeleteDiscountCoupon(id);
                 return Ok("DeletedCoupon Deleted Successfully");
             }
             return Ok("Coupon Not Exist ");

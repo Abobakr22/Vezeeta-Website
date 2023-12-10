@@ -1,18 +1,18 @@
-﻿using Core.Repository;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using Core.Account_Manager;
 using Core.Models;
 using Microsoft.AspNetCore.Identity;
+using Core.Repository;
 
-namespace Data.Repository
+namespace Data
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private ApplicationDbContext context;
+        
         public BaseRepository(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             SeedData.Initialize(userManager, roleManager).Wait();

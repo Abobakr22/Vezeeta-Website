@@ -1,21 +1,20 @@
-﻿using Core.Consts;
+﻿
 using Core.Dtos.AppointmentDtos;
-using Core.Dtos.DoctorDtos;
 using Core.Models;
-using Core.Repository;
-using Humanizer;
+using Core.Service;
+using Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Eventing.Reader;
 
-namespace Data.Repository
+namespace Services
 {
-    public class AppointmentRepository : BaseRepository<Appointment>, IAppointmentRepository
+    public class AppointmentService : BaseRepository<Appointment>, IAppointmentService
     {
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        public AppointmentRepository(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager,
+        public AppointmentService(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager,
               UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : base(context, signInManager, userManager, roleManager)
         {
             _context = context;

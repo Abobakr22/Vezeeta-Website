@@ -1,17 +1,20 @@
 ﻿using Core.Dtos;
 using Core.Models;
 using Core.Repository;
+using Core.Service;
+using Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
-namespace Data.Repository
+namespace Services
 {
-    public class DiscountCouponRepository : BaseRepository<DiscountCoupon>, IDiscountCouponRepository
+    public class DiscountCouponService : BaseRepository<DiscountCoupon>, IDiscountCouponService
     {
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        public DiscountCouponRepository(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager,
+        public DiscountCouponService(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager,
               UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : base(context, signInManager, userManager, roleManager)
         {
             _context = context;
@@ -48,6 +51,7 @@ namespace Data.Repository
                 ExistedCoupon.ExpirationDate = UpdatedCoupon.ExpirationDate;
                 ExistedCoupon.DiscountAmount = UpdatedCoupon.Value;
 
+                _context.SaveChangesAsync();
                 return true;
             }
             return false;
@@ -81,5 +85,9 @@ namespace Data.Repository
             return false;
         }
 
+        public Task<DiscountCoupon> FindAsync(Expression<Func<DiscountCoupon, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

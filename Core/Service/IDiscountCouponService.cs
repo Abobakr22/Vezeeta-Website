@@ -1,9 +1,10 @@
 ﻿using Core.Dtos;
 using Core.Models;
+using Core.Repository;
 
-namespace Core.Repository
+namespace Core.Service
 {
-    public interface IDiscountCouponRepository : IBaseRepository<DiscountCoupon>
+    public interface IDiscountCouponService : IBaseRepository<DiscountCoupon>
     {
         Task<bool> AddDiscountCoupon(DiscountCouponDto DiscountCouponDto);
         Task<bool> UpdateDiscountCoupon(DiscountCouponDto UpdatedCoupon);

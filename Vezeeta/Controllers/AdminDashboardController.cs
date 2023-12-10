@@ -1,4 +1,4 @@
-﻿using Core.Repository;
+﻿using Core.Service;
 using Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,20 +9,20 @@ namespace Vezeeta.Controllers
     public class AdminDashboardController : ControllerBase
     {
         //using dependency injection to inject iDoctorrepository
-        private readonly IDoctorRepository _doctorRepository;
-        private readonly IPatientRepository _petientRepository;
+        private readonly IDoctorService _doctorService;
+        private readonly IPatientService _patientService;
         private readonly ApplicationDbContext _context;
-        public AdminDashboardController(IDoctorRepository doctorRepository, ApplicationDbContext context, IPatientRepository petientRepository)
+        public AdminDashboardController(IDoctorService doctorService, ApplicationDbContext context, IPatientService patientService)
         {
-            _doctorRepository = doctorRepository;
+            _doctorService = doctorService;
             _context = context;
-            _petientRepository = petientRepository;
+            _patientService = patientService;
         }
 
         [HttpGet("NumberOfDoctors")]
         public async Task<IActionResult> NumberOfDoctors()
         {
-            var NumberOfDoctors = await _doctorRepository.NumberOfDoctors();
+            var NumberOfDoctors = await _doctorService.NumberOfDoctors();
             if (NumberOfDoctors > 0)
             {
                 return Ok(NumberOfDoctors);
@@ -33,7 +33,7 @@ namespace Vezeeta.Controllers
         [HttpGet("NumberOfPatients")]
         public async Task<IActionResult> NumberOfPatients()
         {
-            var NumberOfPatients = await _petientRepository.NumberOfPatients();
+            var NumberOfPatients = await _patientService.NumberOfPatients();
             if (NumberOfPatients > 0)
             {
                 return Ok(NumberOfPatients);
@@ -44,14 +44,14 @@ namespace Vezeeta.Controllers
         [HttpGet("NumberOfRequests")]
         public IActionResult NumberOfRequests()
         {
-            var NumberOfRequests = _petientRepository.NumberOfRequests();
+            var NumberOfRequests = _patientService.NumberOfRequests();
             return Ok(NumberOfRequests);
         }
 
         [HttpGet("TopFiveSpecializations")]
         public IActionResult TopFiveSpecializations()
         {
-            var TopSpecializations = _doctorRepository.TopFiveSpecializations();
+            var TopSpecializations = _doctorService.TopFiveSpecializations();
             if (TopFiveSpecializations != null)
             {
                 return Ok(TopSpecializations);
@@ -62,7 +62,7 @@ namespace Vezeeta.Controllers
         [HttpGet("TopTenDoctors")]
         public IActionResult TopTenDoctors()
         {
-            var TopTenDoctors = _doctorRepository.TopTenDoctors();
+            var TopTenDoctors = _doctorService.TopTenDoctors();
             if (TopTenDoctors != null)
             {
                 return Ok(TopTenDoctors);

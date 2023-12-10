@@ -1,12 +1,16 @@
 ﻿using Core.Consts;
 using Core.Dtos;
+using Core.Dtos.BookingDtos;
 using Core.Dtos.DoctorDtos;
+using Core.Dtos.PatientDtos;
 using Core.Dtos.StatisticsDtos;
 using Core.Models;
+using Core.Repository;
 
-namespace Core.Repository
+
+namespace Core.Service
 {
-    public interface IDoctorRepository : IBaseRepository<Doctor>
+    public interface IDoctorService : IBaseRepository<Doctor>
     {
         Task<bool> AddDoctorAsync(AddDoctorDto doctor);
         Task<bool> UpdateDoctorAsync(UpdateDoctorDto doctorModel);
@@ -17,5 +21,9 @@ namespace Core.Repository
         Task<int> NumberOfDoctors();
         List<TopDoctorsDto> TopTenDoctors();
         List<TopSpecializationsDto> TopFiveSpecializations();
+
+        Task<bool> ConfirmCheckUp(int BookingId);
+
+        Task<IEnumerable<GetBookingDetailsDto>> GetAllBookingsOfDoctor(DateTime date, int pageSize, int pageNumber);
     }
 }

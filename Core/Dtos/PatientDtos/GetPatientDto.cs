@@ -1,4 +1,5 @@
 ﻿using Core.Consts;
+using Core.Dtos.AppointmentDtos;
 using Core.Dtos.BookingDtos;
 using Core.Models;
 using System;
@@ -25,7 +26,6 @@ namespace Core.Dtos.PatientDtos
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateOfBirth { get; set; }
-
         public List<GetBookingDetailsDto> requests { get; set; }
     }
 }

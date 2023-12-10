@@ -2,10 +2,12 @@
 using Core.Dtos.DoctorDtos;
 using Core.Dtos.PatientDtos;
 using Core.Models;
+using Core.Repository;
 
-namespace Core.Repository
+
+namespace Core.Service
 {
-    public interface IPatientRepository : IBaseRepository<ApplicationUser>
+    public interface IPatientService : IBaseRepository<ApplicationUser>
     {
         Task<bool> AddNewPatient(AddPatientDto addPatientDto); //Register
         Task<IEnumerable<GetAllDoctorsDto>> GetAllDoctorsSearch(int Page, int PageSize, string Search);

@@ -1,13 +1,10 @@
 using Data;
 using Microsoft.AspNetCore.Identity;
 using Core.Models;
-
-using System.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Core.Repository;
-using Data.Repository;
 using Core;
+using Core.Service;
+using Services;
 
 namespace Vezeeta
 {
@@ -38,46 +35,46 @@ namespace Vezeeta
             #region Injected Services
 
             builder.Services.AddScoped<ApplicationDbContext>();
-            builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-            builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
-            builder.Services.AddScoped<IPatientRepository, PatientRepository>();
-            builder.Services.AddScoped<IDiscountCouponRepository, DiscountCouponRepository>();
-            builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(Data.BaseRepository<>));
+            builder.Services.AddScoped<IDoctorService, DoctorService>();
+            builder.Services.AddScoped<IPatientService, PatientService>();
+            builder.Services.AddScoped<IDiscountCouponService, DiscountCouponService>();
+            builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 
             #endregion
 
 
             builder.Services.AddEndpointsApiExplorer();
-                builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen();
 
-                var app = builder.Build();
-            
+            var app = builder.Build();
 
-                // Configure the HTTP request pipeline.
-                if (app.Environment.IsDevelopment())
-                {
-                    app.UseSwagger();
-                    app.UseSwaggerUI();
-                }
-            
 
-            void  Configure(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
             {
-                
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
-                
-
-                app.UseHttpsRedirection();
-
-                app.UseAuthentication();
-                app.UseAuthorization();
 
 
-                app.MapControllers();
+            void Configure(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+            {
 
-                app.Run();
-            
-            } 
+            }
+
+
+            app.UseHttpsRedirection();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+
+            app.MapControllers();
+
+            app.Run();
+
+        }
     }
 }
 

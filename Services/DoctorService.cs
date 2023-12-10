@@ -1,19 +1,23 @@
-﻿using Core.Dtos;
+﻿using Core.Consts;
+using Core.Dtos;
+using Core.Dtos.BookingDtos;
 using Core.Dtos.DoctorDtos;
 using Core.Dtos.StatisticsDtos;
 using Core.Models;
-using Core.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Core.Service;
+using System.Linq.Expressions;
+using Data;
 
-namespace Data.Repository
+namespace Services
 {
-    public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
+    public class DoctorService : BaseRepository<Doctor>, IDoctorService
     {
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        public DoctorRepository(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager,
+        public DoctorService(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager,
               UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : base(context, signInManager, userManager, roleManager)
         {
             _context = context;
@@ -53,6 +57,7 @@ namespace Data.Repository
         {
             return await _context.Doctors.Select(x => new GetDoctorDto
             {
+                DoctorId = x.Id,
                 Gender = x.ApplicationUsers.Gender.ToString(),
                 Image = x.ApplicationUsers.Image,
                 FirstName = x.ApplicationUsers.FirstName,
@@ -60,6 +65,7 @@ namespace Data.Repository
                 FullName = x.ApplicationUsers.FirstName + " " + x.ApplicationUsers.LastName,
                 Email = x.ApplicationUsers.Email,
                 Phone = x.ApplicationUsers.PhoneNumber,
+                price = x.Price,
                 SpecializationName = x.Specialization.Name,
                 DateOfBirth = x.ApplicationUsers.DateOfBirth
             })
@@ -179,5 +185,58 @@ namespace Data.Repository
            .ToList();
         }
 
+        public async Task<bool> ConfirmCheckUp(int BookingId)
+        {
+            Booking booking = await _context.Bookings.FirstOrDefaultAsync(x => x.Id == BookingId && x.BookingType == RequestType.Pending);
+            if (booking != null)
+            {
+                booking.BookingType = RequestType.Completed;
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        //.Where(user => user.AccountType == AccountType.Patient)
+        public async Task<IEnumerable<GetBookingDetailsDto>> GetAllBookingsOfDoctor(DateTime date, int pageSize, int pageNumber)
+        {
+            //var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Id == )
+            var bookings = await _context.Bookings.Select(x => new GetBookingDetailsDto
+            {
+                Day = x.Appointment.Day.ToString(),
+                Image = x.Doctor.ApplicationUsers.Image,
+                Time = x.Appointment.Hours.Where(t => t.Id == x.AppointmentHourId).Select(x => x.Time).FirstOrDefault(),
+                Age = CalculateAge(x.Patient.DateOfBirth),
+                Patient = new ApplicationUser
+                {
+                    Gender = x.Patient.Gender,
+                    PhoneNumber = x.Patient.PhoneNumber,
+                    Email = x.Patient.Email,
+                },
+            })
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return bookings;
+        }
+
+        private static int CalculateAge(DateTime BirthDay)
+        {
+            DateTime currentDate = DateTime.Now;
+            int age = currentDate.Year - BirthDay.Year;
+
+            if (currentDate.Month < BirthDay.Month || currentDate.Month == BirthDay.Month && currentDate.Day < BirthDay.Day)
+            {
+                age--;
+            }
+
+            return age;
+        }
+
+        public Task<Doctor> FindAsync(Expression<Func<Doctor, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

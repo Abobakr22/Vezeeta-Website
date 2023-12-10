@@ -1,6 +1,6 @@
 ﻿using Core.Dtos.BookingDtos;
 using Core.Dtos.PatientDtos;
-using Core.Repository;
+using Core.Service;
 using Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,18 +10,18 @@ namespace Vezeeta.Controllers
     [ApiController]
     public class PatientController : ControllerBase
     {
-        private readonly IPatientRepository _patientRepository;
+        private readonly IPatientService _patientService;
         private readonly ApplicationDbContext _context;
-        public PatientController(IPatientRepository patientRepository, ApplicationDbContext context)
+        public PatientController(IPatientService patientService, ApplicationDbContext context)
         {
-            _patientRepository = patientRepository;
+            _patientService = patientService;
             _context = context;
         }
 
         [HttpGet("SearchAllDoctors")]
         public async Task<IActionResult> SearchAllDoctors()
         {
-            var Doctors = await _patientRepository.GetAllDoctorsSearch(1, 5, "Ah");
+            var Doctors = await _patientService.GetAllDoctorsSearch(1, 5, "Ah");
             if (Doctors is not null)
             {
                 return Ok(Doctors);
@@ -32,7 +32,7 @@ namespace Vezeeta.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPatientByID([FromRoute] string id)
         {
-            var patient = await _patientRepository.GetPatientById(id);
+            var patient = await _patientService.GetPatientById(id);
             if (patient is not null)
             {
                 return Ok(patient);
@@ -43,7 +43,7 @@ namespace Vezeeta.Controllers
         [HttpGet("GetAllPatients")]
         public async Task<IActionResult> GetAllPatients()
         {
-            var Patients = await _patientRepository.GetAllPatients(1, 5, "A");
+            var Patients = await _patientService.GetAllPatients(1, 5, "A");
             if (Patients is not null)
             {
                 return Ok(Patients);
@@ -54,7 +54,7 @@ namespace Vezeeta.Controllers
         [HttpGet("GetAllBookings")]
         public IActionResult GetAllBookings()
         {
-            var Bookings = _patientRepository.GetAllBooking();
+            var Bookings = _patientService.GetAllBooking();
             if (Bookings is not null)
             {
                 return Ok(Bookings);
@@ -69,7 +69,7 @@ namespace Vezeeta.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _patientRepository.AddNewPatient(Patient);
+                    await _patientService.AddNewPatient(Patient);
                     return Ok();
                 }
                 return BadRequest(ModelState);
@@ -87,7 +87,7 @@ namespace Vezeeta.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _patientRepository.AddBooking(booking);
+                    await _patientService.AddBooking(booking);
 
                     return Ok();
                 }
@@ -99,13 +99,13 @@ namespace Vezeeta.Controllers
             }
         }
 
-        [HttpDelete("CancelBooking")]
+        [HttpPatch("CancelBooking")]
         public async Task<IActionResult> CancelBooking([FromQuery] int id)
         {
             var CancelledBooking = await _context.Bookings.FindAsync(id);
             if (CancelledBooking is not null)
             {
-                await _patientRepository.CancelBooking(id);
+                await _patientService.CancelBooking(id);
                 return Ok("Booking Cancelled Successfully");
             }
             return Ok(false);
