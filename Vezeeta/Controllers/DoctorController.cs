@@ -27,7 +27,7 @@ namespace Vezeeta.Controllers
         {
             DateTime date = new DateTime(2023, 12, 20);  // Pass that date parameter to the method and change date as you want
 
-            var AllBookings = await _doctorService.GetAllBookingsOfDoctor(date, 1, 5);
+            var AllBookings = await _doctorService.GetAllBookingsOfDoctor(date, 1, 5,User.Identity.Name);
             if (AllBookings is not null)
             {
                 return Ok(AllBookings);

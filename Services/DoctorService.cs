@@ -201,10 +201,10 @@ namespace Services
         }
 
         //.Where(user => user.AccountType == AccountType.Patient)
-        public async Task<IEnumerable<GetBookingDetailsDto>> GetAllBookingsOfDoctor(DateTime date, int pageSize, int pageNumber)
+        public async Task<IEnumerable<GetBookingDetailsDto>> GetAllBookingsOfDoctor(DateTime date, int pageSize, int pageNumber,string userName)
         {
-            //var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Id == )
-            var bookings = await _context.Bookings.Select(x => new GetBookingDetailsDto
+            var doctorId =  _userManager.Users.FirstOrDefault(x=>x.UserName==userName).Doctor.Id;
+            var bookings = await _context.Bookings.Where(z => z.DoctorId ==doctorId ).Select(x => new GetBookingDetailsDto
             {
                 Day = x.Appointment.Day.ToString(),
                 Image = x.Doctor.ApplicationUsers.Image,

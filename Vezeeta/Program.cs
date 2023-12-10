@@ -6,6 +6,9 @@ using Core;
 using Core.Service;
 using Services;
 using Data.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Vezeeta
 {
@@ -26,6 +29,26 @@ namespace Vezeeta
             //Install - Package Microsoft.AspNetCore.Identity.EntityFrameworkCore
             //Install - Package Microsoft.VisualStudio.Web.CodeGeneration.Design
             //Install - Package System.IdentityModel.Tokens.Jwt
+
+            //builder.Services.AddAuthentication(auth =>
+            //{
+            //    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //}).AddJwtBearer(options =>
+            //{
+            //    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            //    {
+            //        ValidateIssuer = true,
+            //        ValidateAudience = true,
+
+            //        ValidAudience = "http://Vezeeta.net",
+            //        ValidIssuer = "http://Vezeeta.net",
+
+            //        RequireExpirationTime = true,
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MyKey")),
+            //        ValidateIssuerSigningKey = true
+            //    };
+            //});
 
 
             //to create user model
@@ -59,11 +82,6 @@ namespace Vezeeta
             }
 
 
-            void Configure(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
-            {
-
-            }
-
 
             app.UseHttpsRedirection();
 
@@ -78,57 +96,3 @@ namespace Vezeeta
         }
     }
 }
-
-
-
-
-
-
-
-
-
-//builder.Services.AddSwaggerGen(options =>
-//{
-//    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-//    {
-//        Name = "Authorization",
-//        Type = SecuritySchemeType.ApiKey,
-//        Scheme = "Bearer",
-//        BearerFormat = "JWT",
-//        In = ParameterLocation.Header,
-//        Description = "Enter your jwt key"
-//    });
-//});
-
-
-//to enable Jwt
-//builder.Services.AddAuthentication(auth =>
-//{
-//    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//}).AddJwtBearer(options =>
-//{
-//    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-//    {
-//        ValidateIssuer = true,
-//        ValidateAudience = true,
-
-//        ValidAudience = "http://Vezeeta.net",
-//        ValidIssuer = "http://Vezeeta.net",
-
-//        RequireExpirationTime = true,
-//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MyKey")),
-//        ValidateIssuerSigningKey = true
-//    };
-//});
-
-
-
-
-
-
-//options =>
-//{
-//    options.Password.RequireDigit = true;
-//    options.Password.RequiredLength = 6;
-//    options.Password.RequireLowercase = true;

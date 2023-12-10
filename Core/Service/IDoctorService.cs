@@ -24,6 +24,6 @@ namespace Core.Service
 
         Task<bool> ConfirmCheckUp(int BookingId);
 
-        Task<IEnumerable<GetBookingDetailsDto>> GetAllBookingsOfDoctor(DateTime date, int pageSize, int pageNumber);
+        Task<IEnumerable<GetBookingDetailsDto>> GetAllBookingsOfDoctor(DateTime date, int pageSize, int pageNumber, string userName);
     }
 }
